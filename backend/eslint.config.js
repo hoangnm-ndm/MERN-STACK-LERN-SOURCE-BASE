@@ -20,4 +20,18 @@ export default [
       'prefer-const': 'error',
     },
   },
+  {
+    // File .cjs dùng CommonJS (migrate-mongo nạp bằng require), cần sourceType riêng.
+    files: ['**/*.cjs'],
+    languageOptions: {
+      ecmaVersion: 2023,
+      sourceType: 'commonjs',
+      globals: { ...globals.node },
+    },
+    rules: {
+      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      eqeqeq: ['error', 'always'],
+      'prefer-const': 'error',
+    },
+  },
 ];

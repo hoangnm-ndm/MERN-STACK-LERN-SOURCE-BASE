@@ -18,4 +18,38 @@
 
 ## Stack & cấu trúc project
 
-*(Chưa có code — sẽ cập nhật khi khởi tạo client/server: package manager, cấu trúc thư mục, DB, biến môi trường...)*
+Monorepo npm workspaces: `backend/` (Express 5 + Mongoose) + `frontend/` (React + Vite).
+JavaScript ESM + JSDoc, **không** TypeScript. Chi tiết trong `docs/` (01–09).
+
+- Backend: modular theo feature (`src/modules/<tên>/` gồm `.routes/.controller/.service/.schema/.model`), dùng chung ở `src/shared/`.
+- Frontend: `features/<tên>/{api,hooks,components,schemas,store,index.js}`, `pages/` mỏng, `layouts/`, `shared/`.
+- DB: MongoDB + Mongoose; migration bằng migrate-mongo; transaction cần replica set (docker-compose đã dựng `rs0`).
+- Frontend state: TanStack Query (dữ liệu API) · Zustand (phiên đăng nhập) · URL params (bộ lọc, trang) · react-hook-form + Zod (form).
+- Email: Resend + React Email (`backend/emails/*.jsx`). Storage: Cloudflare R2 presigned URL. Scheduler: node-cron in-process.
+
+## Quy ước bắt buộc khi sửa code
+
+Chi tiết và lý do trong `docs/08-quy-uoc-code.md`. Những điểm không được vi phạm:
+
+- Ranh giới tầng: route khai báo path + middleware · controller gọi service + trả response · service chứa logic và truy vấn DB · model chỉ định nghĩa dữ liệu. Controller **không** truy vấn DB.
+- Module **không** import model của module khác — gọi qua service được export.
+- Response luôn qua helper trong `shared/utils/response.js`; lỗi luôn qua `errorHandler` duy nhất; mã lỗi khai báo ở `shared/errors/errorCodes.js`.
+- Dùng Express 5 → **không** thêm `asyncHandler`, không `try/catch` trong controller.
+- Validate bằng Zod ở tầng route (`validate()`), controller chỉ nhận dữ liệu đã parse. Đây cũng là lớp chặn NoSQL operator injection.
+- **Không mass assignment**: không `create(req.body)` / `findByIdAndUpdate(id, req.body)`.
+- Update phải có `{ new: true, runValidators: true }` — Mongoose mặc định không chạy validator khi update.
+- Query dùng `.lean()` **bắt buộc** map qua `toApi()`; API luôn trả `id`, không trả `_id`/`__v`.
+- Regex tạo từ input phải escape (chống ReDoS).
+- Frontend: `component → hook → api → shared/lib/http`. Component không gọi axios trực tiếp. Sau mutation phải `invalidateQueries`.
+- Frontend HTML: điều hướng dùng `<Link>`, hành động dùng `<button type="...">`, không `div/li onClick`. Mọi màn hình có dữ liệu phải đủ 4 trạng thái (dùng `<DataState>`).
+- Index tạo bằng migration, không dựa vào `autoIndex`. Mọi thay đổi DB đều có migration.
+- Dùng `logger`, không `console.log`. Không log mật khẩu, token, chuỗi kết nối.
+
+## Trạng thái hiện tại của source
+
+Đây là **bộ khung**: cấu trúc, chữ ký hàm và component đã khai báo, **thân hàm để
+trống** kèm gợi ý `TODO` để người học tự viết. Hàm chưa triển khai ném
+`new Error('... chưa được triển khai')` — đó là cố ý.
+
+Khi được nhờ điền code: làm theo thứ tự trong `docs/07-huong-dan-hoan-thien.md` và
+cập nhật `CHECKLIST.md` sau mỗi bước.

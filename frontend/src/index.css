@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+/**
+ * Tailwind v4 cấu hình bằng CSS, không cần tailwind.config.js.
+ * Token của dự án khai báo trong @theme rồi dùng như class bình thường
+ * (ví dụ `bg-brand`, `text-brand-dark`).
+ */
+@theme {
+  --color-brand: #2563eb;
+  --color-brand-dark: #1d4ed8;
+  --color-brand-light: #dbeafe;
+}
+
+/* TODO: thêm style toàn cục nếu cần (focus ring, scrollbar).
+   Giữ file này MỎNG — style của component nên nằm cùng component bằng class
+   Tailwind, không dồn vào đây rồi phải đoán class nào áp cho ai. */
