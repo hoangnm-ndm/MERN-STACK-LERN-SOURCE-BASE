@@ -1,0 +1,48 @@
+/**
+ * Mã lỗi nghiệp vụ, tách khỏi HTTP status.
+ * Frontend xử lý theo `code` (bền vững) chứ không theo message (có thể đổi text).
+ * Thêm mã mới ở đây thay vì viết chuỗi rải rác trong service.
+ */
+export const ErrorCodes = {
+  // Chung
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
+  RESOURCE_CONFLICT: 'RESOURCE_CONFLICT',
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+  RATE_LIMITED: 'RATE_LIMITED',
+
+  // Xác thực
+  AUTH_INVALID_CREDENTIALS: 'AUTH_INVALID_CREDENTIALS',
+  AUTH_TOKEN_MISSING: 'AUTH_TOKEN_MISSING',
+  AUTH_TOKEN_INVALID: 'AUTH_TOKEN_INVALID',
+  AUTH_TOKEN_EXPIRED: 'AUTH_TOKEN_EXPIRED',
+  AUTH_EMAIL_NOT_VERIFIED: 'AUTH_EMAIL_NOT_VERIFIED',
+  AUTH_EMAIL_ALREADY_EXISTS: 'AUTH_EMAIL_ALREADY_EXISTS',
+  AUTH_ACCOUNT_BLOCKED: 'AUTH_ACCOUNT_BLOCKED',
+  AUTH_METHOD_DISABLED: 'AUTH_METHOD_DISABLED', // phương thức bị tắt trong system settings
+  AUTH_SESSION_REVOKED: 'AUTH_SESSION_REVOKED',
+  AUTH_REFRESH_REUSED: 'AUTH_REFRESH_REUSED', // phát hiện dùng lại refresh token cũ
+
+  // Token dùng một lần
+  TOKEN_INVALID: 'TOKEN_INVALID',
+  TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+  TOKEN_ALREADY_USED: 'TOKEN_ALREADY_USED',
+
+  // Phân quyền
+  FORBIDDEN: 'FORBIDDEN',
+  SUPER_ADMIN_PROTECTED: 'SUPER_ADMIN_PROTECTED', // không được sửa/xoá/hạ quyền Super Admin
+  CANNOT_MODIFY_SELF: 'CANNOT_MODIFY_SELF', // tự chặn/tự hạ quyền chính mình
+
+  // Media
+  MEDIA_IN_USE: 'MEDIA_IN_USE', // đang được dùng nên không cho xoá
+  MEDIA_UPLOAD_NOT_CONFIRMED: 'MEDIA_UPLOAD_NOT_CONFIRMED',
+  MEDIA_TYPE_NOT_ALLOWED: 'MEDIA_TYPE_NOT_ALLOWED',
+  MEDIA_TOO_LARGE: 'MEDIA_TOO_LARGE',
+  FOLDER_NOT_EMPTY: 'FOLDER_NOT_EMPTY',
+
+  // Scheduler
+  JOB_INVALID_CRON: 'JOB_INVALID_CRON',
+  JOB_ALREADY_RUNNING: 'JOB_ALREADY_RUNNING',
+};
+
+/** @typedef {typeof ErrorCodes[keyof typeof ErrorCodes]} ErrorCode */

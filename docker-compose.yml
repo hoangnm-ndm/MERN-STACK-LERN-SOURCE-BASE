@@ -1,0 +1,26 @@
+# MongoDB cho môi trường dev.
+# Chạy dạng replica set 1 node vì Mongoose transaction (session.withTransaction)
+# chỉ hoạt động trên replica set — standalone sẽ báo lỗi.
+# Healthcheck tự gọi rs.initiate() lần đầu nên không cần chạy tay.
+services:
+  mongo:
+    image: mongo:7
+    container_name: mern-base-mongo
+    command: ['--replSet', 'rs0', '--bind_ip_all']
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: >
+        mongosh --quiet --eval "
+          try { rs.status().ok }
+          catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }).ok }
+        "
+      interval: 10s
+      timeout: 10s
+      start_period: 20s
+      retries: 10
+
+volumes:
+  mongo-data:

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "checkJs": false,
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "noEmit": true
+  },
+  "include": ["src/**/*", "emails/**/*", "scripts/**/*"],
+  "exclude": ["node_modules", "migrations"]
+}
